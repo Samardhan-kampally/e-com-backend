@@ -1,5 +1,7 @@
 package com.ecom.entities;
 
+import com.ecom.dto.CategoryDto;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,5 +23,16 @@ public class Category {
 	
 	@Lob
 	private String description;
+	
+	public CategoryDto getCategoryDto() {
+		
+		CategoryDto categoryDto = new CategoryDto();
+		
+		categoryDto.setId(id);
+		categoryDto.setName(name);
+		categoryDto.setDescription(description);
+		
+		return categoryDto;
+	}
 	
 }

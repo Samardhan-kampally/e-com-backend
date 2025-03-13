@@ -20,10 +20,12 @@ public class SignupController {
 	@Autowired
 	private UserService userService;
 	
-	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> signupUser(@RequestBody SignupDto signupDto){
+		
+		signupDto.setEmail(signupDto.getEmail().toLowerCase());
 		
 		if(userService.hasUserWithEmail(signupDto.getEmail())) {
 			return new ResponseEntity<>("User Already Exists",HttpStatus.NOT_ACCEPTABLE);

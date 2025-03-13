@@ -56,11 +56,14 @@ public class AuthenticationController {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 		} catch (BadCredentialsException e) {
+			System.out.println("Bad Cred");
 			throw new BadCredentialsException("Incorrect username or password");
 		} catch (DisabledException de) {
 			response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, "User is not Activated");
 			return;
 		}
+		
+		
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
 		User user = userRepository.findFirstByEmail(authenticationRequest.getUsername());

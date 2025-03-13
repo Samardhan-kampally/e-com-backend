@@ -6,8 +6,11 @@ import org.springframework.stereotype.Service;
 
 import com.ecom.dto.SignupDto;
 import com.ecom.dto.UserDto;
+import com.ecom.entities.Order;
 import com.ecom.entities.User;
+import com.ecom.enums.OrderStatus;
 import com.ecom.enums.UserRole;
+import com.ecom.repository.OrderRepository;
 import com.ecom.repository.UserRepository;
 import com.ecom.service.UserService;
 
@@ -18,6 +21,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private OrderRepository orderRepository;
 
 	@PostConstruct
 	public void createAdminAccount() {
@@ -47,27 +53,20 @@ public class UserServiceImpl implements UserService {
 		user.setUserRole(UserRole.USER);
 
 		User userCreated = userRepository.save(user);
+		
+		Order order = new Order();
+		order.setPrice(0d);
+		order.setOrderStatus(OrderStatus.PENDING);
+		order.setUser(userCreated);
+		orderRepository.save(order);
 
-		return DaoToDto(userCreated);
+		return userCreated.getUserDto();
+		
+//		return DaoToDto(userCreated);
 
 	}
 
-	public User DtoToDao(UserDto signupDto) {
-
-		return null;
-	}
-
-	public UserDto DaoToDto(User user) {
-		UserDto userDto = new UserDto();
-
-		userDto.setName(user.getName());
-		userDto.setEmail(user.getEmail());
-		userDto.setPassword(user.getPassword());
-		userDto.setUserRole(user.getUserRole());
-		userDto.setBio(user.getBio());
-
-		return userDto;
-	}
+	
 
 	@Override
 	public boolean hasUserWithEmail(String email) {
